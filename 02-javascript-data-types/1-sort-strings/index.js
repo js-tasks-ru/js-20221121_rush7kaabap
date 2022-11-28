@@ -8,8 +8,8 @@ export function sortStrings(arr, param = 'asc') {
     //let  sorted_arr = arr.sort( (a, b) => a.localeCompare(b) )
 
     let sorted_arr = arr.slice( ).sort((a, b) => {
-        let srt_result1 = a.localeCompare( b );
-        let srt_result2 = a.toLowerCase( ).localeCompare( b.toLowerCase( ) );
+        let srt_result1 = a.localeCompare( b, 'ru' );
+        let srt_result2 = a.toLowerCase( ).localeCompare( b.toLowerCase( ) , 'ru');
         if ( srt_result1 == srt_result2 ){
             return srt_result1;
         } else {
