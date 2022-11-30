@@ -5,7 +5,7 @@
  * @returns {object} - returns the new object
  */
 export const omit = (obj, ...fields) => {
-    let res_obj = {};
+    const res_obj = {};
 
     const ar_keys = Object.keys(obj)
     ar_keys.forEach(element => {
