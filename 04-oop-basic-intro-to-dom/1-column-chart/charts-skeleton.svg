@@ -8,6 +8,7 @@
     <rect x="50" y="79" width="9" height="30" fill="#ECEEF3"/>
     <rect x="60" y="70" width="9" height="39" fill="#ECEEF3"/>
     <rect x="70" y="59" width="9" height="50" fill="#ECEEF3"/>
+    <rect x="80" y="98" width="9" height="11" fill="#ECEEF3"/>    
     <rect x="90" y="87" width="9" height="22" fill="#ECEEF3"/>
     <rect x="100" y="79" width="9" height="30" fill="#ECEEF3"/>
     <rect x="110" y="74" width="9" height="35" fill="#ECEEF3"/>
@@ -29,5 +30,4 @@
     <rect x="270" y="98" width="9" height="11" fill="#ECEEF3"/>
     <rect x="280" y="74" width="9" height="35" fill="#ECEEF3"/>
     <rect x="290" y="92" width="9" height="17" fill="#ECEEF3"/>
-    <rect x="80" y="98" width="9" height="11" fill="#ECEEF3"/>
 </svg>
