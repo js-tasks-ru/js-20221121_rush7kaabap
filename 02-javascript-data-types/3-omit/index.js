@@ -5,13 +5,13 @@
  * @returns {object} - returns the new object
  */
 export const omit = (obj, ...fields) => {
-    const res_obj = {};
+    const resObj = {};
 
     const ar_keys = Object.keys(obj)
     ar_keys.forEach(element => {
         if ( !fields.includes(element) ) {
-            res_obj[element] = obj[element];
+            resObj[element] = obj[element];
         }          
     });
-    return res_obj;
+    return resObj;
 };
