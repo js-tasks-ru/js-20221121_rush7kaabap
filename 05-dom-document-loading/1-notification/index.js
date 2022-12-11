@@ -1,4 +1,5 @@
 export default class NotificationMessage {
+
     //static displayed = false;
     static lastNotif;
     //static displayTimeout; // Date()
