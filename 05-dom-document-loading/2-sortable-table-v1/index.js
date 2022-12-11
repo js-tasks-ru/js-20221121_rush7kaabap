@@ -1,4 +1,5 @@
 export default class SortableTable {
+
   static directions = {
     asc: 1,
     desc: -1
@@ -164,6 +165,5 @@ export default class SortableTable {
     this.remove();
     // NOTE: удаляем обработчики событий, если они есть
   }
-
 }
 
