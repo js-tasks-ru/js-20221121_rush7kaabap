@@ -152,9 +152,24 @@ export default class SortableTable {
     
   }
   
-  _revertSortOrder( ){
-    this.sorted.order =  (this.sorted.order === 'asc') ? 'desc': 'asc';
+  initEventListeners() {
+    // NOTE: в данном методе добавляем обработчики событий, если они есть
+    this._addListeners();
   }
+
+  remove() {
+    this.element.remove();
+  }
+
+  destroy() {
+    this.remove();
+    // NOTE: удаляем обработчики событий, если они есть
+    for (handler of this.evntHandlers ){
+      //{"elem" : singleElem, "handler" : newHandler }
+      handler["elem"].removeEventListener('pointerdown', handler["handler"]);
+    } 
+    
+  }  
 
   _addListeners(){
     const elems = this.element.querySelectorAll("[data-id]");
@@ -163,19 +178,9 @@ export default class SortableTable {
       const sortableBool = (singleElem.dataset.sortable.toLowerCase() === "true");
       
       if (sortableBool){
-        //const srtOrder = 'desc';
-        //if ( singleElem.dataset.order === srtOrder){
-        //  srtOrder = 'asc';
-        //}
         const newHandler = () => {
-          //if (this.sorted.id === singleElem.dataset.id) {
-          //  this._revertSortOrder( );
-          //} else {
             this.sorted.id = singleElem.dataset.id;
             this.sorted.order =  (this.sorted.order === 'asc') ? 'desc': 'asc';
-            //this.sorted.order = this._revertSortOrder( );
-          //}
-
           this.sort( );
         };
         this.evntHandlers.pop({"elem" : singleElem, "handler" : newHandler });
@@ -225,22 +230,5 @@ export default class SortableTable {
     });
   }
 
-  initEventListeners() {
-    // NOTE: в данном методе добавляем обработчики событий, если они есть
-    this._addListeners();
-  }
 
-  remove() {
-    this.element.remove();
-  }
-
-  destroy() {
-    this.remove();
-    // NOTE: удаляем обработчики событий, если они есть
-    for (handler of this.evntHandlers ){
-      //{"elem" : singleElem, "handler" : newHandler }
-      handler["elem"].removeEventListener('pointerdown', handler["handler"]);
-    } 
-    
-  }  
 }
