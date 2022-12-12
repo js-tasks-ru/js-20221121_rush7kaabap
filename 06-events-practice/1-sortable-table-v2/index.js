@@ -154,21 +154,24 @@ export default class SortableTable {
   
   initEventListeners() {
     // NOTE: в данном методе добавляем обработчики событий, если они есть
-    this._addListeners();
+    this._addDelegatedListener();
+    //this._addListeners();
   }
 
   remove() {
-    this.element.remove();
+    if (this.element){
+      this.element.remove();
+    }
   }
 
   destroy() {
     this.remove();
     // NOTE: удаляем обработчики событий, если они есть
-    for (handler of this.evntHandlers ){
+    for (let handler of this.evntHandlers ){
       //{"elem" : singleElem, "handler" : newHandler }
       handler["elem"].removeEventListener('pointerdown', handler["handler"]);
     } 
-    
+    this.element = null;    
   }  
 
   _addListeners(){
@@ -183,10 +186,26 @@ export default class SortableTable {
             this.sorted.order =  (this.sorted.order === 'asc') ? 'desc': 'asc';
           this.sort( );
         };
-        this.evntHandlers.pop({"elem" : singleElem, "handler" : newHandler });
+        this.evntHandlers.push({"elem" : singleElem, "handler" : newHandler });
         singleElem.addEventListener('pointerdown', newHandler);
       }
     }
+  }
+
+  _addDelegatedListener() {
+    const newHandler = (event) => {
+      const element = event.target.closest('.sortable-table__cell');
+      if ( element === undefined  || 
+        element.dataset.sortable.toLowerCase() != "true" ) return;
+      
+      this.sorted.id = element.dataset.id;
+      this.sorted.order =  (this.sorted.order === 'asc') ? 'desc': 'asc';
+      this.sort( );
+    };
+    this.subElements.header.addEventListener(
+      'pointerdown', 
+       newHandler);
+    this.evntHandlers.push({"elem" : this.subElements.header, "handler" : newHandler });
   }
 
   _rerender( ){
