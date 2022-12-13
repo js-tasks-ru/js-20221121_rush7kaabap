@@ -31,7 +31,7 @@ class Tooltip {
       return Tooltip.instance;
     } 
     
-    Tooltip.Instance = this;
+    Tooltip.instance = this;
   }
 
   initialize () {
@@ -81,7 +81,7 @@ class Tooltip {
 
   destroy() {
     // NOTE: удаляем обработчики событий, если они есть
-    for (let handler of Tooltip.evntHandlers ){
+    for (let handler of this.evntHandlers ){
       handler["elem"].removeEventListener(handler["evnt"], handler["handler"]);
     } 
 
