@@ -16,6 +16,26 @@ export default class SortableTable {
   rendered = false;
   evntHandlers = []; //[{"elem" : singleElem, "handler" : newHandler }]
 
+  onSortClick = event => {
+    const column = event.target.closest('[data-sortable="true"]');
+
+    const toggleOrder = order => {
+      const orders = {
+        asc: 'desc',
+        desc: 'asc',
+      };
+
+      return orders[order];
+    };
+
+    if (column) {
+      const { id, order } = column.dataset;
+      //const newOrder = toggleOrder( order );
+      this.sorted = { id, order: toggleOrder(this.sorted.order) };
+      this.sort();
+    }
+  }
+
   constructor(headersConfig, {
     data = [],
     sorted = { id : '', order : ''}
@@ -106,12 +126,10 @@ export default class SortableTable {
   }
 
   render() {
-    const element = document.createElement("div"); // (*)
+    const element = document.createElement("div");
 
     element.innerHTML = this.getTemplate();
 
-    // NOTE: в этой строке мы избавляемся от обертки-пустышки в виде `div`
-    // который мы создали на строке (*)
     this.element = element.firstElementChild;
     this.setColumnArrow();
     this.subElements = this.getTableDOM( );
@@ -155,7 +173,6 @@ export default class SortableTable {
   initEventListeners() {
     // NOTE: в данном методе добавляем обработчики событий, если они есть
     this._addDelegatedListener();
-    //this._addListeners();
   }
 
   remove() {
@@ -168,44 +185,17 @@ export default class SortableTable {
     this.remove();
     // NOTE: удаляем обработчики событий, если они есть
     for (let handler of this.evntHandlers ){
-      //{"elem" : singleElem, "handler" : newHandler }
       handler["elem"].removeEventListener('pointerdown', handler["handler"]);
     } 
-    this.element = null;    
-  }  
-
-  _addListeners(){
-    const elems = this.element.querySelectorAll("[data-id]");
-
-    for (const singleElem of elems) {
-      const sortableBool = (singleElem.dataset.sortable.toLowerCase() === "true");
-      
-      if (sortableBool){
-        const newHandler = () => {
-            this.sorted.id = singleElem.dataset.id;
-            this.sorted.order =  (this.sorted.order === 'asc') ? 'desc': 'asc';
-          this.sort( );
-        };
-        this.evntHandlers.push({"elem" : singleElem, "handler" : newHandler });
-        singleElem.addEventListener('pointerdown', newHandler);
-      }
-    }
+    this.element = null;   
+    this.subElements = {}; 
   }
 
   _addDelegatedListener() {
-    const newHandler = (event) => {
-      const element = event.target.closest('.sortable-table__cell');
-      if ( element === undefined  || 
-        element.dataset.sortable.toLowerCase() != "true" ) return;
-      
-      this.sorted.id = element.dataset.id;
-      this.sorted.order =  (this.sorted.order === 'asc') ? 'desc': 'asc';
-      this.sort( );
-    };
     this.subElements.header.addEventListener(
       'pointerdown', 
-       newHandler);
-    this.evntHandlers.push({"elem" : this.subElements.header, "handler" : newHandler });
+       this.onSortClick);
+    this.evntHandlers.push({"elem" : this.subElements.header, "handler" : this.onSortClick });
   }
 
   _rerender( ){
@@ -248,6 +238,4 @@ export default class SortableTable {
       }
     });
   }
-
-
 }
