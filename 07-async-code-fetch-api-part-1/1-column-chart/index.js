@@ -4,14 +4,12 @@ const BACKEND_URL = 'https://course-js.javascript.ru';
 
 export default class ColumnChart {
     chartHeight = 50;
+    element;
     subElements  = {};
-
-    dbKeys = [];
+    data = {};
 
     rerender = () => {
-      if (!this.data.length) {
-        this.element.classList.add("column-chart_loading");
-      } else {
+      if (this.data && Object.values(this.data).length) {
         this.element.classList.remove("column-chart_loading");
       }
     
@@ -22,64 +20,76 @@ export default class ColumnChart {
     constructor( {
       url = "", 
       range = { from : new Date( ), to : new Date( ) }, 
-
-      data = [],
       label = "",
-      value = 0,
-      link  = "",
+      link  = "",    
+      value = 0,      
       formatHeading = data => data
       } = {} ) {
       
-      this.data = data;
       this.label = label;
       this.value = formatHeading(value);
-      this.url = url;
+      this.url = new URL(url, BACKEND_URL);
       this.range = range;
       this.link = link;
       
-
+      
       this.render();
       this.initEventListeners();
+      this.update(this.range.from, this.range.to);
     };
 
     async loadServerData(){
-        const url = new URL('https://course-js.javascript.ru/' + this.url);
-        url.searchParams.set('from', this.range.from.toISOString());
-        url.searchParams.set('to', this.range.to.toISOString());
+      const url = this.url;
+      url.searchParams.set('from', this.range.from.toISOString());
+      url.searchParams.set('to', this.range.to.toISOString());
 
+      return await fetchJson(url);
+        /*
         try {
         const response = await fetch(url);
         const dataHist = await response.json();
-        // Загружаем данные в формате json
-        //.then(response => response.json())
-        //.then(dataHist => {
-            this.dbKeys = Object.keys(dataHist);
-            this.data   = Object.values(dataHist);
-            this.value = this.data.reduce((sum, current) => sum + current, 0);
-            this.rerender();
-        // });
+
+        this.dbKeys = Object.keys(dataHist);
+        this.data   = Object.values(dataHist);
+        this.value = this.data.reduce((sum, current) => sum + current, 0);
+
         } catch(err) {
 
         }
+
+        return this.data; // Promis по идее должен возвращать данные
+        */
     }
 
-    update( dateBegin = new Date(), dateEnd =  new Date() ) {
-        this.range = { from : dateBegin, to : dateEnd };
-        this.loadServerData();
+    async update( dateBegin = new Date(), dateEnd =  new Date() ) {
+        this.element.classList.add("column-chart_loading");
+        this.setRange(dateBegin, dateEnd);
+        const newData = await this.loadServerData();
+        
+        this.data = newData;
+        this.value = Object.values(this.data).reduce((sum, current) => sum + current, 0);
+        this.rerender();
+
+        return this.data; // Promis по идее должен возвращать данные
     };
+
+    setRange(dateBegin, dateEnd){
+      this.range = { from : dateBegin, to : dateEnd };
+    }
 
     getChartBars( ){
         
-        if ( this.data.length == 0 ){
+        if ( !this.data || !Object.values(this.data).length ){
             return '';
         }
-
-        const maxHt = Math.max(...this.data);
+        const dataVals = Object.values(this.data);
+        const dataKeys = Object.keys(this.data);
+        const maxHt = Math.max(...dataVals);
         const barMax = this.chartHeight / maxHt;
 
-        const resBar = this.data.map( ( item, curIndex ) => {
+        const resBar = dataVals.map( ( item, curIndex ) => {
             return  `<div style="--value: ${Math.floor(item * barMax)}" 
-              data-tooltip=${this.dbKeys[curIndex]}></div>`;             
+              data-tooltip=${dataKeys[curIndex]}></div>`;             
         }).join('');
         return resBar;
     }
