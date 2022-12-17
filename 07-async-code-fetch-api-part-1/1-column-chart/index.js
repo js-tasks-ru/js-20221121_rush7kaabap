@@ -13,8 +13,8 @@ export default class ColumnChart {
         this.element.classList.remove("column-chart_loading");
       }
     
-      this.subElements .body.innerHTML = this.getChartBars( );
-      this.subElements .header.innerHTML = this.getChartHeader( );
+      this.subElements.body.innerHTML = this.getChartBars( );
+      this.subElements.header.innerHTML = this.getChartHeader( );
     }
 
     constructor( {
@@ -44,21 +44,6 @@ export default class ColumnChart {
       url.searchParams.set('to', this.range.to.toISOString());
 
       return await fetchJson(url);
-        /*
-        try {
-        const response = await fetch(url);
-        const dataHist = await response.json();
-
-        this.dbKeys = Object.keys(dataHist);
-        this.data   = Object.values(dataHist);
-        this.value = this.data.reduce((sum, current) => sum + current, 0);
-
-        } catch(err) {
-
-        }
-
-        return this.data; // Promis по идее должен возвращать данные
-        */
     }
 
     async update( dateBegin = new Date(), dateEnd =  new Date() ) {
