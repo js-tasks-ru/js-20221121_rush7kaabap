@@ -54,6 +54,7 @@ describe('forms-fetch-api-part-2/product-form-v1', () => {
   });
 
   it('should render product data correctly', () => {
+    //console.debug('subElements - ', productFormComponent.subElements);
     const { productForm, imageListContainer } = productFormComponent.subElements;
     const defaultFormData = {
       title: '',
@@ -67,8 +68,9 @@ describe('forms-fetch-api-part-2/product-form-v1', () => {
 
     const fields = Object.keys(defaultFormData);
     const values = {};
-
+    //console.debug('productForm - ', productForm);
     for (const field of fields) {
+      //console.debug('field - ', field);
       values[field] = productForm.querySelector(`#${field}`).value;
     }
 
