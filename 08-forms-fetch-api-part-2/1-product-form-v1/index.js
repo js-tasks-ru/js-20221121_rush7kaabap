@@ -70,7 +70,6 @@ export default class ProductForm {
   
       this.element = element.firstElementChild;
       this.subElements = this.getSubelements();
-      //this.rendered = true;
       this.toolbar = this.getToolbar();
       this.initEventListeners();
     }
@@ -126,20 +125,7 @@ export default class ProductForm {
   }
 
   async commitChanges(changesModel) {
-    
-    /*
-    //const formData = new FormData();
-    let formData = new FormData();
-    for (const [elemKey, elemVal] of Object.entries(changesModel)) {
-      //formData.append('key1', 'value1');
-      //console.log('elemKey - ' + elemKey + ', elemVal - ' + escapeHtml(elemVal.toString()));
-      formData.append(elemKey, escapeHtml(elemVal.toString()));
-    }
-    //formData.append("images", imageBlob, "image.png");
-    //formData.append("images", imageBlob, "image.png");
-    */
     const url = new URL(this.backendURLEntitySet, BACKEND_URL);
-    //const prodData = JSON.stringify(changesModel);
     let prodData = this.omitObjectFields(changesModel, 'brand', 'characteristics', 'rating');
     prodData.quantity = +prodData.quantity;
     prodData.status = +prodData.status;
@@ -147,15 +133,12 @@ export default class ProductForm {
     prodData.discount = +prodData.discount;
 
     prodData = JSON.stringify(prodData);
-    //const referer = url.href + '/' + this.productId;
-    const response = await fetch(url.href, {//url, {
+    const response = await fetch(url.href, {
       method: (!this.productId) ? "PUT" : "PATCH",
       headers: {
         "Content-Type": "application/json"
-        //referer: referer       
-        //Authorization: "Client-ID " + IMGUR_CLIENT_ID //"Client-ID 28aaa2e823b03b1"
       },
-      body: prodData //formData
+      body: prodData 
     });
     /*
     if (response.status != 200) {
@@ -254,11 +237,8 @@ export default class ProductForm {
     element.innerHTML = this.getTemplate();
 
     this.subElements = this.getSubelements();
-    //this.rendered = true;
     this.toolbar = this.getToolbar();
-    this.initEventListeners();    
-    // но по-хорошему надо выяснять тип у елемента в this.subElements 
-    // и перестраивать только его (чтобы не сбивать подписку на события)
+    this.initEventListeners();
   }
 
   getToolbar() {
