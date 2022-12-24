@@ -93,6 +93,8 @@ export default class ProductForm {
       } finally {
         this.subElements.productForm.uploadImage.classList.remove("is-loading");
         this.subElements.productForm.uploadImage.disabled = false;
+
+        elem.remove();
       }
     };
 
