@@ -83,7 +83,7 @@ export default class SortableList {
     itm.remove();
     this.element.dispatchEvent(new CustomEvent("sortable-list-delete", {
       bubbles: !0,
-      details: {
+      detail: {
         item: itm
       }
     }));
